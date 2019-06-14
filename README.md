@@ -7,3 +7,4 @@ a Makefile that shows a functional build and flash process using IceStorm
 with our board.
 
 ![Close-Up of WebFPGA Device with RGB LED](https://raw.githubusercontent.com/webfpga/webfpga_icestorm_examples/master/still.jpg)
+![Close-Up IceStorm Makefile](https://raw.githubusercontent.com/webfpga/webfpga_icestorm_examples/master/icestorm-still.jpg)
