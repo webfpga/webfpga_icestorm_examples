@@ -22,7 +22,7 @@ all:
 	# Convert to bitstream using IcePack
 	icepack $(BUILD)/$(PROJ).asc $(BUILD)/$(PROJ).bin
 
-	./bin_to_bc.sh $(BUILD)/$(PROJ).bin
+	bash bin_to_bc.sh $(BUILD)/$(PROJ).bin
 
 flash:
 	webfpga flash build/icestorm_example.bin.cbin
