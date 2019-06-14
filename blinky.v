@@ -5,7 +5,7 @@
 //
 // This Source Code is Public Domain.
 
-module top(input wire clk, output reg WF_LED);
+module fpga_top(input wire clk, output reg WF_LED);
     reg [24:0] counter;
 
     // Blink LED every 1000 ms
