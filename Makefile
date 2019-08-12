@@ -8,7 +8,7 @@ DEVICE    = 5k
 FOOTPRINT = sg48
 
 # Files
-FILES = top.v
+FILES = rgb.v
 #FILES = blinky.v
 
 .PHONY: all clean burn
