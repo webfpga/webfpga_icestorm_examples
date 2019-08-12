@@ -26,7 +26,7 @@ all:
 	bash bin_to_bc.sh $(BUILD)/$(PROJ).bin &>/dev/null
 
 flash:
-	webfpga flash build/icestorm_example.bin.cbin
+	npx webfpga-cli flash build/icestorm_example.bin.cbin
 
 #burn:
 	#iceprog $(BUILD)/$(PROJ).bin
