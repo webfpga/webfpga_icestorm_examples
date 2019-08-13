@@ -4,16 +4,17 @@ DEVICE    = 5k
 FOOTPRINT = sg48
 
 # Files
-FILES = rgb.v
-#FILES = blinky.v
+FILE = rgb.v
+#FILE = blinky.v
 
+PROJ = $(basename $(FILE))
 .PHONY: all clean flash
 
 all:
 	# if build folder doesn't exist, create it
 	mkdir -p $(BUILD)
 	# synthesize using Yosys
-	yosys -p "synth_ice40 -top fpga_top -blif $(BUILD)/$(PROJ).blif" $(FILES)
+	yosys -p "synth_ice40 -top fpga_top -blif $(BUILD)/$(PROJ).blif" $(FILE)
 	# Place and route using arachne
 	arachne-pnr -d $(DEVICE) -P $(FOOTPRINT) -o $(BUILD)/$(PROJ).asc -p pinmap.pcf $(BUILD)/$(PROJ).blif
 	# Convert to bitstream using IcePack
