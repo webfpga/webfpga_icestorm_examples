@@ -1,10 +1,6 @@
 # Project setup
-PROJ      = icestorm_example
 BUILD     = ./build
-#DEVICE    = 8k
-#DEVICE    = iCE40UP5K
 DEVICE    = 5k
-#FOOTPRINT = ct256
 FOOTPRINT = sg48
 
 # Files
