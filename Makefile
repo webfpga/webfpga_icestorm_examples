@@ -7,7 +7,7 @@ FOOTPRINT = sg48
 FILES = rgb.v
 #FILES = blinky.v
 
-.PHONY: all clean burn
+.PHONY: all clean flash
 
 all:
 	# if build folder doesn't exist, create it
@@ -23,9 +23,6 @@ all:
 
 flash:
 	npx webfpga-cli flash build/icestorm_example.bin.cbin
-
-#burn:
-	#iceprog $(BUILD)/$(PROJ).bin
 
 clean:
 	rm build/*
