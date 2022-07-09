@@ -1,29 +1,48 @@
+
+
 # Project setup
-BUILD     = ./build
 DEVICE    = 5k
 FOOTPRINT = sg48
 
-# Files
-FILE = rgb.v
-#FILE = blinky.v
+# Include the `src` directory in the search path for source (verilog) files
+VPATH=src
 
-PROJ = $(basename $(FILE))
-.PHONY: all clean flash
+SOURCES := $(wildcard src/*.v)
+BINFILES := $(addprefix build/, $(addsuffix .bin, $(basename $(notdir $(SOURCES)))))
 
-all:
-	# if build folder doesn't exist, create it
-	mkdir -p $(BUILD)
-	# synthesize using Yosys
-	yosys -p "synth_ice40 -top fpga_top -blif $(BUILD)/$(PROJ).blif" $(FILE)
-	# Place and route using arachne
-	arachne-pnr -d $(DEVICE) -P $(FOOTPRINT) -o $(BUILD)/$(PROJ).asc -p pinmap.pcf $(BUILD)/$(PROJ).blif
-	# Convert to bitstream using IcePack
-	icepack $(BUILD)/$(PROJ).asc $(BUILD)/$(PROJ).bin
+.PHONY: all build clean flash proj
 
-	bash bin_to_bc.sh $(BUILD)/$(PROJ).bin &>/dev/null
+# Compiles all .v files so they're ready to flash
+all	: $(BINFILES)
+	echo '$(SOURCES)'
 
+# Compiles verilog to an intermediate form
+build/%.blif	: %.v build
+	yosys -q -p "synth_ice40 -top fpga_top -blif $@" $<
+
+# Place and route using arachne
+build/%.asc : build/%.blif
+	arachne-pnr -q -d $(DEVICE) -P $(FOOTPRINT) -o $@ -p pinmap.pcf $<
+
+# Prepare for flashing. Convert to bitstream w/ icepack then compress
+build/%.bin : build/%.asc
+	icepack $< $@
+	tools/compress-bitstream $@ $@.h h  "$E+Fri_14_Jun_2019_09:00:38_PM_UTC+shastaplus"
+	tools/compress-bitstream $@.h $@.c  c
+	tools/compress-bitstream $@.c $@.cbin  b
+	tools/compress-bitstream $@.cbin $@.db db
+
+build:
+	mkdir -p build
+
+# Usage: make flash proj={project}
 flash:
-	npx webfpga-cli flash build/icestorm_example.bin.cbin
+ifdef proj
+	$(MAKE) build/$(proj).bin
+	npm run webfpga-cli flash $(proj).bin.cbin
+else
+	@echo 'Usage: flash proj={project name, e.g blinky}'
+endif
 
 clean:
-	rm build/*
+	-rm -rf build
