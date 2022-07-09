@@ -1,4 +1,4 @@
-# Copyright 2019-2022 Auburn Technologies and contributors
+# Copyright 2019-2022 Auburn Ventures LLC and contributors
 # SPDX-License-Identifier: MIT
 
 # Project setup
