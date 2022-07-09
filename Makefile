@@ -1,4 +1,5 @@
-
+# Copyright 2019-2022 Auburn Technologies and contributors
+# SPDX-License-Identifier: MIT
 
 # Project setup
 DEVICE    = 5k
@@ -7,8 +8,13 @@ FOOTPRINT = sg48
 # Include the `src` directory in the search path for source (verilog) files
 VPATH=src
 
+# Find all verilog files
 SOURCES := $(wildcard src/*.v)
+# Create a list of .bin files from the sources
 BINFILES := $(addprefix build/, $(addsuffix .bin, $(basename $(notdir $(SOURCES)))))
+# Look for the `webfpga` tool on the path and save the return code
+HAS_CLI = $(shell which webfpga; echo $$?)
+
 
 .PHONY: all build clean flash proj
 
@@ -37,9 +43,12 @@ build:
 
 # Usage: make flash proj={project}
 flash:
+ifeq ($(HAS_CLI), 1) 
+	$(error "Run `pip install webfpga` first, please")
+endif
 ifdef proj
 	$(MAKE) build/$(proj).bin
-	npm run webfpga-cli flash $(proj).bin.cbin
+	webfpga flash build/$(proj).bin
 else
 	@echo 'Usage: flash proj={project name, e.g blinky}'
 endif
