@@ -30,13 +30,9 @@ build/%.blif	: %.v build
 build/%.asc : build/%.blif
 	arachne-pnr -q -d $(DEVICE) -P $(FOOTPRINT) -o $@ -p pinmap.pcf $<
 
-# Prepare for flashing. Convert to bitstream w/ icepack then compress
+# Prepare for flashing. Convert to bitstream w/ icepack
 build/%.bin : build/%.asc
 	icepack $< $@
-	tools/compress-bitstream $@ $@.h h  "$E+Fri_14_Jun_2019_09:00:38_PM_UTC+shastaplus"
-	tools/compress-bitstream $@.h $@.c  c
-	tools/compress-bitstream $@.c $@.cbin  b
-	tools/compress-bitstream $@.cbin $@.db db
 
 build:
 	mkdir -p build
