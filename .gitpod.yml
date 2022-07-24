@@ -9,12 +9,12 @@ tasks:
         libseccomp-dev \
         libjansson-dev \
         libyaml-dev \
-        libxml2-dev
-      git clone --depth=1 --single-branch https://github.com/universal-ctags/ctags.git
-      cd ctags
-      ./autogen.sh
-      ./configure 
-      make -j $(nprocs)
+        libxml2-dev && \
+      git clone --depth=1 --single-branch https://github.com/universal-ctags/ctags.git && \
+      cd ctags && \
+      ./autogen.sh && \
+      ./configure && \
+      make && \
       make install
   - name: 'Install oss-cad-suite'
     init: 
