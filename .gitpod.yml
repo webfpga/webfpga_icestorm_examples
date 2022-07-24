@@ -1,23 +1,7 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - name: 'Install universal-ctags'
-    init: 
-      sudo apt install \
-        gcc make \
-        pkg-config autoconf automake \
-        python3-docutils \
-        libseccomp-dev \
-        libjansson-dev \
-        libyaml-dev \
-        libxml2-dev && \
-      git clone --depth=1 --single-branch https://github.com/universal-ctags/ctags.git && \
-      cd ctags && \
-      ./autogen.sh && \
-      ./configure && \
-      make && \
-      make install
-  - name: 'Install oss-cad-suite'
-    init: 
+  - init: sudo apt install universal-ctags
+  - init: 
       curl -SL https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2022-07-23/oss-cad-suite-linux-x64-20220723.tgz | tar -xzC /workspace
     command: export PATH=/workspace/oss-cad-suite/bin:$PATH
 
