@@ -28,7 +28,8 @@ build/%.blif	: %.v build
 
 # Place and route using arachne
 build/%.asc : build/%.blif
-	arachne-pnr -q -d $(DEVICE) -P $(FOOTPRINT) -o $@ -p pinmap.pcf $<
+	nextpnr-ice40 --up5k --package $(FOOTPRINT)\
+		--asc $@ --pcf "$(BUILD_DIR)/pinmap.pcf" $<
 
 # Prepare for flashing. Convert to bitstream w/ icepack
 build/%.bin : build/%.asc
