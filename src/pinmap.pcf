@@ -1,9 +1,9 @@
 # Hard-wired components on the Shasta Plus board
-WF_LED       31
-WF_CLK       35
-WF_BUTTON    42
-WF_NEO       32
-WF_CPU1      11
-WF_CPU2      12
-WF_CPU3      13
-WF_CPU4      10
+set_io  WF_LED       31
+set_io  WF_CLK       35
+set_io  WF_BUTTON    42
+set_io  WF_NEO       32
+set_io  WF_CPU1      11
+set_io  WF_CPU2      12
+set_io  WF_CPU3      13
+set_io  WF_CPU4      10
