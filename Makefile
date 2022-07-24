@@ -23,13 +23,14 @@ all	: $(BINFILES)
 	echo '$(SOURCES)'
 
 # Compiles verilog to an intermediate form
-build/%.blif	: %.v build
-	yosys -q -p "synth_ice40 -top fpga_top -blif $@" $<
+build/%.json	: %.v build
+	yosys -q -p "synth_ice40 -top fpga_top -json $@" $<
 
 # Place and route using arachne
-build/%.asc : build/%.blif
+build/%.asc : build/%.json pinmap.pcf
 	nextpnr-ice40 --up5k --package $(FOOTPRINT)\
-		--asc $@ --pcf "$(BUILD_DIR)/pinmap.pcf" $<
+		--asc $@ --json $< \
+		--pcf src/pinmap.pcf
 
 # Prepare for flashing. Convert to bitstream w/ icepack
 build/%.bin : build/%.asc
