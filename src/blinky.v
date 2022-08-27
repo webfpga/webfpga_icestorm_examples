@@ -5,6 +5,8 @@
 //
 // This Source Code is Public Domain.
 
+// @MAP_IO clk    13
+
 module fpga_top(input wire clk, output reg WF_LED);
     reg [24:0] counter;
 

@@ -18,17 +18,24 @@ HAS_CLI = $(shell which webfpga; echo $$?)
 
 .PHONY: all build clean flash proj
 
+# Keep these files in the build directory (and remove other intermediates)
+.PRECIOUS: build/%.pcf build/%.bin
+
 # Compiles all .v files so they're ready to flash
 all	: $(BINFILES)
 	echo '$(SOURCES)'
 
-# Compiles verilog to an intermediate form
+# Compile verilog to an intermediate form
 build/%.blif	: %.v build
 	yosys -q -p "synth_ice40 -top fpga_top -blif $@" $<
 
+# Generate .pcf (Physical Constraints File) from @MAP_IO statements
+build/%.pcf : src/%.v
+	tools/map_io.py -o $@ $<
+
 # Place and route using arachne
-build/%.asc : build/%.blif
-	arachne-pnr -q -d $(DEVICE) -P $(FOOTPRINT) -o $@ -p pinmap.pcf $<
+build/%.asc : build/%.blif build/%.pcf
+	arachne-pnr -q -d $(DEVICE) -P $(FOOTPRINT) -o $@ -p $(addsuffix .pcf, $(basename $<)) $<
 
 # Prepare for flashing. Convert to bitstream w/ icepack
 build/%.bin : build/%.asc
