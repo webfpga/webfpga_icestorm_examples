@@ -1,0 +1,10 @@
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+tasks:
+  - init: sudo apt-get -y install universal-ctags
+  - init: 
+      curl -SL https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2022-07-23/oss-cad-suite-linux-x64-20220723.tgz | tar -xzC /workspace
+    command: export PATH=/workspace/oss-cad-suite/bin:$PATH
+
+vscode:
+  extensions:
+    - mshr-h.veriloghdl@1.5.3

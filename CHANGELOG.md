@@ -21,3 +21,7 @@
 * Code builds into the `build` directory.
 * Tooling moves to the `tools` directory. 
 
+## [1.1.1]
+
+Added configuration file for [gitpod.io](https://gitpod.io). This gives you a browser-based editor 
+along all with all the build tools. (But no USB-based flashing, yet.)
