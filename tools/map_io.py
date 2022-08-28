@@ -100,7 +100,7 @@ class MapSpec:
         self.symbol = f"key${index}" if index is not None else key
         self.base_name = key
         self.ext_pin = value
-        self.int_pin = pin_map[value-1]
+        self.int_pin = pin_map[value]
         self.index = index
 
     def __hash__(self):
