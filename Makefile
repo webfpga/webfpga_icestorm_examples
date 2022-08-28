@@ -26,16 +26,16 @@ all	: $(BINFILES)
 	echo '$(SOURCES)'
 
 # Compile verilog to an intermediate form
-build/%.blif	: %.v build
-	yosys -q -p "synth_ice40 -top fpga_top -blif $@" $<
+build/%.json	: %.v build
+	yosys -q -p "synth_ice40 -top fpga_top -json $@" $<
 
 # Generate .pcf (Physical Constraints File) from @MAP_IO statements
 build/%.pcf : src/%.v
 	tools/map_io.py -o $@ $<
 
 # Place and route using arachne
-build/%.asc : build/%.blif build/%.pcf
-	arachne-pnr -q -d $(DEVICE) -P $(FOOTPRINT) -o $@ -p $(addsuffix .pcf, $(basename $<)) $<
+build/%.asc : build/%.json build/%.pcf
+	nextpnr-ice40 --up5k --package $(FOOTPRINT) --asc $@ --pcf $(addsuffix .pcf, $(basename $<)) --json $<
 
 # Prepare for flashing. Convert to bitstream w/ icepack
 build/%.bin : build/%.asc
