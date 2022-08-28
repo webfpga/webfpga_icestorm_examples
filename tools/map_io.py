@@ -94,7 +94,7 @@ class MapSpec:
     """Holds the values from the @MAP_IO statement"""
 
     def __init__(self, key, value, index=None) -> None:
-        # Map external pin 0 to internal pin 17, etc.
+        # Map external pin 1 to internal pin 17, etc.
         pin_map = [17, 16, 14, 23, 20, 19, 18, 21, 25, 26, 28, 27, 34, 35,
                    36, 37, 40, 44, 46, 47, 45, 48, 2, 3, 4, 9, 6, 43, 41, 39, 38, 15]
         self.symbol = f"key${index}" if index is not None else key
@@ -107,7 +107,7 @@ class MapSpec:
         return hash((self.symbol))
 
     def to_set_io(self) -> str:
-        return f"set_io\t{self.symbol}\t{self.ext_pin}\n"
+        return f"set_io\t{self.symbol}\t{self.int_pin}\n"
 
 
 if __name__ == '__main__':
