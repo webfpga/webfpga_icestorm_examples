@@ -1,2 +1,6 @@
-build/*
+build/
 compdecomp
+# For MacOS users
+.DS_Store
+# vi temp files
+*~

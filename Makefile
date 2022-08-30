@@ -1,29 +1,60 @@
+# Copyright 2019-2022 Auburn Ventures LLC and contributors
+# SPDX-License-Identifier: MIT
+
 # Project setup
-BUILD     = ./build
 DEVICE    = 5k
 FOOTPRINT = sg48
 
-# Files
-FILE = rgb.v
-#FILE = blinky.v
+# Include the `src` directory in the search path for source (verilog) files
+VPATH=src
 
-PROJ = $(basename $(FILE))
-.PHONY: all clean flash
+# Find all verilog files
+SOURCES := $(wildcard src/*.v)
+# Create a list of .bin files from the sources
+BINFILES := $(addprefix build/, $(addsuffix .bin, $(basename $(notdir $(SOURCES)))))
+# Look for the `webfpga` tool on the path and save the return code
+HAS_CLI = $(shell which webfpga; echo $$?)
 
-all:
-	# if build folder doesn't exist, create it
-	mkdir -p $(BUILD)
-	# synthesize using Yosys
-	yosys -p "synth_ice40 -top fpga_top -blif $(BUILD)/$(PROJ).blif" $(FILE)
-	# Place and route using arachne
-	arachne-pnr -d $(DEVICE) -P $(FOOTPRINT) -o $(BUILD)/$(PROJ).asc -p pinmap.pcf $(BUILD)/$(PROJ).blif
-	# Convert to bitstream using IcePack
-	icepack $(BUILD)/$(PROJ).asc $(BUILD)/$(PROJ).bin
 
-	bash bin_to_bc.sh $(BUILD)/$(PROJ).bin &>/dev/null
+.PHONY: all build clean flash proj
 
+# Keep these files in the build directory (and remove other intermediates)
+.PRECIOUS: build/%.pcf build/%.bin
+
+# Compiles all .v files so they're ready to flash
+all	: $(BINFILES)
+	echo '$(SOURCES)'
+
+# Compile verilog to an intermediate form
+build/%.json	: %.v build
+	yosys -q -p "synth_ice40 -top fpga_top -json $@" $<
+
+# Generate .pcf (Physical Constraints File) from @MAP_IO statements
+build/%.pcf : src/%.v
+	tools/map_io.py -o $@ $<
+
+# Place and route using arachne
+build/%.asc : build/%.json build/%.pcf
+	nextpnr-ice40 --up5k --package $(FOOTPRINT) --asc $@ --pcf $(addsuffix .pcf, $(basename $<)) --json $<
+
+# Prepare for flashing. Convert to bitstream w/ icepack
+build/%.bin : build/%.asc
+	icepack $< $@
+
+build:
+	mkdir -p build
+
+# Usage: make flash proj={project}
 flash:
-	npx webfpga-cli flash build/icestorm_example.bin.cbin
+ifeq ($(HAS_CLI), 1) 
+	$(error "Run `pip install webfpga` first, please")
+endif
+ifdef proj
+	$(MAKE) build/$(proj).bin
+	webfpga flash build/$(proj).bin
+else
+	@echo 'Usage: flash proj={project name, e.g blinky}'
+endif
 
 clean:
-	rm build/*
+	-rm -rf build
