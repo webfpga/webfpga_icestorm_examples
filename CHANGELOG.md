@@ -9,7 +9,7 @@
 * The makefile has been completely redone. 
 	* You no longer need to edit the makefile to specify a project. 
 	* Add the project to `make flash`  like this: `make flash proj=blinky`.
-	* Bitstream compression is is inline in the make file, removing the need for `bin_to_bc.sh`.
+	* Bitstream compression is inline in the make file, removing the need for `bin_to_bc.sh`.
 	* `make all` builds everything in `src`
 
 ### Pinmaps
@@ -25,3 +25,7 @@
 
 Added configuration file for [gitpod.io](https://gitpod.io). This gives you a browser-based editor 
 along all with all the build tools. (But no USB-based flashing, yet.)
+
+## [1.1.2]
+
+Implements `@FPGA_TOP`
