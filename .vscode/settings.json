@@ -1,0 +1,6 @@
+{
+    "verilog.linting.linter": "verilator",
+    "verilog.linting.verilator.runAtFileLocation": true,
+    "verilog.ctags.path": "/usr/bin/ctags",
+    "verilog.logging.enabled": true
+}

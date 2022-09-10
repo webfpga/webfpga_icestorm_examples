@@ -25,9 +25,9 @@ HAS_CLI = $(shell which webfpga; echo $$?)
 all	: $(BINFILES)
 	echo '$(SOURCES)'
 
-# Compile verilog to an intermediate form
+# Compile verilog to an intermediate form, and create the build dir if needed
 build/%.json	: %.v build
-	yosys -q -p "synth_ice40 -top fpga_top -json $@" $<
+	yosys -q -p "synth_ice40 -top $(shell tools/get_top.py $<) -json $@" $<
 
 # Generate .pcf (Physical Constraints File) from @MAP_IO statements
 build/%.pcf : src/%.v
